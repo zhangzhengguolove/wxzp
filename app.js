@@ -1,6 +1,15 @@
 //app.js
 App({
   onLaunch: function () {
+    wx.getSystemInfo({
+      success: res => {
+        //导航高度
+
+        this.globalData.navHeight = res.statusBarHeight + 46;
+        this.navH = res.statusBarHeight;
+        this.platform = res.platform;
+        }
+    })
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -34,6 +43,8 @@ App({
     })
   },
   globalData: {
-    userInfo: null
+    isPlayMusic: false,
+    navHeight: 0
   }
+  
 })

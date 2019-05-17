@@ -1,11 +1,11 @@
 //index.js
 //获取应用实例
 const app = getApp()
-
 Page({
   data: {
     usernameInput: '',
     passwordInput: '',
+    rightwordInput: '',
     navH: 0
   },
   //事件处理函数
@@ -18,7 +18,7 @@ Page({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
       })
-    } else if (this.data.canIUse){
+    } else if (this.data.canIUse) {
       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
       // 所以此处加入 callback 以防止这种情况
       app.userInfoReadyCallback = res => {
@@ -40,13 +40,15 @@ Page({
       })
     }
   },
-  getUserInfo: function(e) {
-    console.log(e)
+  getUserInfo: function (e) {
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+  },
+  navBack: function (options) { //头部返回键
+    wx.navigateBack()
   },
   usernameInput: function (e) {//身份证判断
     this.setData({
@@ -58,29 +60,48 @@ Page({
       passwordInput: e.detail.value
     })
   },
-  loginBtnClick: function (e) {//登陆判断
-    if (this.data.usernameInput==""){
+  rightwordInput: function (e) {//密码判断
+    this.setData({
+      rightwordInput: e.detail.value
+    })
+  },
+  registerBtnClick: function (e) {
+    if (this.data.usernameInput == "") {
       wx.showToast({
         title: '请输入身份证号！',
         icon: 'none',
         duration: 2000
-      }) 
-    } else if (this.data.passwordInput == ""){
+      })
+    } else if (this.data.passwordInput == "") {
       wx.showToast({
-        title: '请输入密码！',
+        title: '请输入新密码！',
         icon: 'none',
         duration: 2000
-      }) 
+      })
+    } else if (this.data.rightwordInput == "") {
+      wx.showToast({
+        title: '请确认新密码！',
+        icon: 'none',
+        duration: 2000
+      })
+    } else if (this.data.rightwordInput != this.data.passwordInput) {
+      wx.showToast({
+        title: '密码不相同，请确认后再输入！',
+        icon: 'none',
+        duration: 2000
+      })
+    } else {
+      wx.showModal({
+        title: '请前往登陆!',
+        showCancel: false,
+        success(res) {
+          wx.navigateTo({
+            url: '../index/index',
+          })
+        }
+      })
     }
-  },
-  ccmm: function (options) {//注册
-     wx.navigateTo({
-       url: '../register/register',
-     })
-  },
-  wjmma: function (options) {//忘记密码
-    wx.navigateTo({
-      url: '../forget/forget',
-    })
   }
+
+
 })
